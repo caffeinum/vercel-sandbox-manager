@@ -1,12 +1,20 @@
 
+import { db } from '../db';
+import { commandsTable } from '../db/schema';
 import { type GetSandboxCommandsInput, type Command } from '../schema';
+import { eq, desc } from 'drizzle-orm';
 
 export const getSandboxCommands = async (input: GetSandboxCommandsInput): Promise<Command[]> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is:
-  // 1. Query the database for all commands associated with the given sandbox ID
-  // 2. Return commands ordered by creation date (most recent first)
-  // 3. Include all command details: output, error output, exit codes, and status
-  
-  return Promise.resolve([]);
+  try {
+    const results = await db.select()
+      .from(commandsTable)
+      .where(eq(commandsTable.sandbox_id, input.sandbox_id))
+      .orderBy(desc(commandsTable.created_at))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Getting sandbox commands failed:', error);
+    throw error;
+  }
 };
