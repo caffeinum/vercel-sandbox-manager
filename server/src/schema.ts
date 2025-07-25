@@ -15,7 +15,7 @@ export type CommandStatus = z.infer<typeof commandStatusSchema>;
 
 // Sandbox schema
 export const sandboxSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   user_session_id: z.string(),
   github_repo_url: z.string().url(),
   runtime: runtimeTypeSchema,
@@ -32,8 +32,8 @@ export type Sandbox = z.infer<typeof sandboxSchema>;
 
 // Command schema
 export const commandSchema = z.object({
-  id: z.number(),
-  sandbox_id: z.number(),
+  id: z.string(),
+  sandbox_id: z.string(),
   command: z.string(),
   status: commandStatusSchema,
   output: z.string().nullable(),
@@ -57,7 +57,7 @@ export type CreateSandboxInput = z.infer<typeof createSandboxInputSchema>;
 
 // Input schema for executing a command
 export const executeCommandInputSchema = z.object({
-  sandbox_id: z.number(),
+  sandbox_id: z.string(),
   command: z.string().min(1)
 });
 
@@ -65,7 +65,7 @@ export type ExecuteCommandInput = z.infer<typeof executeCommandInputSchema>;
 
 // Input schema for stopping a sandbox
 export const stopSandboxInputSchema = z.object({
-  sandbox_id: z.number()
+  sandbox_id: z.string()
 });
 
 export type StopSandboxInput = z.infer<typeof stopSandboxInputSchema>;
@@ -79,7 +79,7 @@ export type GetUserSandboxInput = z.infer<typeof getUserSandboxInputSchema>;
 
 // Input schema for getting sandbox commands
 export const getSandboxCommandsInputSchema = z.object({
-  sandbox_id: z.number()
+  sandbox_id: z.string()
 });
 
 export type GetSandboxCommandsInput = z.infer<typeof getSandboxCommandsInputSchema>;

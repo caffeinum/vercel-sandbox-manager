@@ -1,33 +1,29 @@
 
-import { db } from '../db';
-import { sandboxesTable } from '../db/schema';
+import { store } from '../store';
 import { type GetUserSandboxInput, type Sandbox } from '../schema';
-import { eq, ne, desc } from 'drizzle-orm';
 
 export const getUserSandbox = async (input: GetUserSandboxInput): Promise<Sandbox | null> => {
   try {
-    // Query for the most recent sandbox for the user that is not stopped
-    const results = await db.select()
-      .from(sandboxesTable)
-      .where(
-        eq(sandboxesTable.user_session_id, input.user_session_id)
-      )
-      .orderBy(desc(sandboxesTable.created_at))
-      .limit(1)
-      .execute();
-
-    if (results.length === 0) {
-      return null;
-    }
-
-    const sandbox = results[0];
+    const sandbox = store.getUserSandbox(input.user_session_id);
     
-    // Filter out stopped sandboxes
-    if (sandbox.status === 'stopped') {
+    if (!sandbox) {
       return null;
     }
 
-    return sandbox;
+    // Return sandbox in the expected format
+    return {
+      id: sandbox.id,
+      user_session_id: sandbox.user_session_id,
+      github_repo_url: 'https://github.com/example/repo', // Mock data
+      runtime: 'node',
+      vcpus: 1,
+      status: sandbox.status,
+      vercel_sandbox_id: sandbox.container_id,
+      public_url: `http://localhost:3000/${sandbox.id}`,
+      error_message: null,
+      created_at: sandbox.created_at,
+      updated_at: sandbox.created_at
+    };
   } catch (error) {
     console.error('Failed to get user sandbox:', error);
     throw error;

@@ -1,7 +1,6 @@
 
 import { initTRPC } from '@trpc/server';
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import 'dotenv/config';
 import cors from 'cors';
 import superjson from 'superjson';
 
